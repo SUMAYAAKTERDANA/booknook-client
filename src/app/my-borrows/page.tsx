@@ -22,27 +22,48 @@ export default function MyBorrowsPage() {
   const [borrows, setBorrows] = useState<Borrow[]>([]);
   const [loading, setLoading] = useState(true);
 
-  //data fetch
+  // ডাটা ফেচ
   useEffect(() => {
-    document.title = "BookNook | My Borrows"; 
+    document.title = "BookNook | My Borrows";
+    
     const fetchBorrows = async () => {
       if (session?.user?.email) {
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/borrows?email=${session.user.email}`);
+         
+          const { data: tokenData } = await authClient.token();
+
+          
+          const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/borrows?email=${session.user.email}`, {
+            headers: {
+              "Authorization": `Bearer ${tokenData?.token}`
+            }
+          });
+          
           const data = await res.json();
-          setBorrows(data);
+          
+         
+          if (Array.isArray(data)) {
+            setBorrows(data);
+          } else {
+            console.error("Expected array but got:", data);
+            setBorrows([]); 
+          }
+
         } catch (error) {
           console.error("Failed to fetch borrows", error);
+          setBorrows([]);
         } finally {
           setLoading(false);
         }
+      } else if (!isPending && !session) {
+       
+        setLoading(false);
       }
     };
 
-    if (session) fetchBorrows();
-  }, [session]);
-
-  
+    fetchBorrows();
+  }, [session, isPending]);
+ 
   useEffect(() => {
     if (!isPending && !session) {
       router.push("/login");
@@ -51,8 +72,15 @@ export default function MyBorrowsPage() {
 
   const handleReturn = async (id: string) => {
     try {
+     
+      const { data: tokenData } = await authClient.token();
+
+      
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/borrows/${id}`, {
         method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${tokenData?.token}`
+        },
       });
 
       if (res.ok) {
@@ -82,7 +110,7 @@ export default function MyBorrowsPage() {
         <p className="text-center text-gray-500 mt-10">You haven't borrowed any books yet.</p>
       ) : (
         <>
-         
+        
           <div className="hidden md:block bg-white rounded-lg shadow-md overflow-hidden">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -104,7 +132,6 @@ export default function MyBorrowsPage() {
                     <td className="p-4 text-gray-600">{new Date(borrow.borrowDate).toLocaleDateString()}</td>
                     <td className="p-4 text-gray-600">{new Date(borrow.returnDate).toLocaleDateString()}</td>
                     <td className="p-4 text-center">
-                      
                       <Button onClick={() => handleReturn(borrow._id)} className="bg-red-500 hover:bg-red-600 text-white">
                         Return Book
                       </Button>
@@ -115,6 +142,7 @@ export default function MyBorrowsPage() {
             </table>
           </div>
 
+         
           <div className="grid grid-cols-1 gap-4 md:hidden">
             {borrows.map((borrow) => (
               <div key={borrow._id} className="bg-white p-4 rounded-lg shadow-md flex flex-col space-y-3">
@@ -127,7 +155,6 @@ export default function MyBorrowsPage() {
                     <p className="text-sm text-gray-500">Return: {new Date(borrow.returnDate).toLocaleDateString()}</p>
                   </div>
                 </div>
-              
                 <Button onClick={() => handleReturn(borrow._id)} className="w-full bg-red-500 hover:bg-red-600 text-white mt-2">
                   Return Book
                 </Button>

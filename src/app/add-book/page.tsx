@@ -21,7 +21,11 @@ export default function AddBookPage() {
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ 
+      ...formData, 
+      [name]: name === "totalCopies" ? Number(value) : value 
+    });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,13 +54,13 @@ export default function AddBookPage() {
       });
       const imgData = await imgRes.json();
       
-      if (!imgData.success) {
-        throw new Error("Image upload failed");
-      }
-
+      if (!imgData.success) throw new Error("Image upload failed");
       const imageUrl = imgData.data.url;
 
-     
+      
+      const { data: tokenData } = await authClient.token();
+
+      
       const bookData = {
         ...formData,
         image: imageUrl,
@@ -67,7 +71,10 @@ export default function AddBookPage() {
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/books`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${tokenData?.token}`, 
+        },
         body: JSON.stringify(bookData),
       });
 
@@ -87,7 +94,7 @@ export default function AddBookPage() {
 
   return (
     <div className="max-w-2xl mx-auto my-10 bg-white p-8 rounded-lg shadow-md">
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">Add a New Book</h1>
+      <h1 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-8">Add a New Book</h1>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

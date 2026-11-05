@@ -28,9 +28,8 @@ export default function BookDetailsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [borrowing, setBorrowing] = useState(false);
 
-  // data fetch
   useEffect(() => {
-    document.title = `BookNook | ${book?.title || 'Book Details'}`; // ✅ ডাইনামিক টাইটেল
+    document.title = `BookNook | ${book?.title || 'Book Details'}`; 
     
     const fetchBook = async () => {
       try {
@@ -47,7 +46,6 @@ export default function BookDetailsPage() {
     if (id) fetchBook();
   }, [id, book?.title]);
 
-  
   useEffect(() => {
     if (!isPending && !session) {
       router.push(`/login?callbackUrl=/books/${id}`);
@@ -62,6 +60,9 @@ export default function BookDetailsPage() {
 
     setBorrowing(true);
     try {
+     
+      const { data: tokenData } = await authClient.token();
+
       const borrowData = {
         bookId: book?._id,
         bookTitle: book?.title,
@@ -69,13 +70,14 @@ export default function BookDetailsPage() {
         userEmail: session.user.email,
         userName: session.user.name,
         borrowDate: new Date(),
-        returnDate: new Date(new Date().setDate(new Date().getDate() + 9)), 
+        returnDate: new Date(new Date().setDate(new Date().getDate() + 7)),
       };
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/borrows`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${tokenData?.token}`, 
         },
         body: JSON.stringify(borrowData),
       });
@@ -88,7 +90,8 @@ export default function BookDetailsPage() {
         const errorData = await res.json();
         toast.error(errorData.message || "Failed to borrow book!");
       }
-    } catch (error) {
+    } catch (err) {
+      console.error("Borrow error:", err);
       toast.error("Something went wrong!");
     } finally {
       setBorrowing(false);
@@ -110,8 +113,6 @@ export default function BookDetailsPage() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
       <div className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
-       
-        
         <div className="md:w-1/2 h-64 sm:h-80 md:h-auto relative">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -121,7 +122,6 @@ export default function BookDetailsPage() {
           />
         </div>
 
-        
         <div className="md:w-1/2 p-6 md:p-8 flex flex-col">
           <span className="text-sm font-semibold text-blue-600 uppercase tracking-wide mb-2">
             {book.category}
@@ -152,7 +152,6 @@ export default function BookDetailsPage() {
         </div>
       </div>
 
-      {/* Borrow Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl">

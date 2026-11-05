@@ -37,7 +37,7 @@ export default function MyBooksPage() {
   });
 
   useEffect(() => {
-    document.title = "BookNook | My Books";
+    document.title = "BookNook | My Books"; 
     const fetchMyBooks = async () => {
       if (session?.user?.email) {
         try {
@@ -79,9 +79,15 @@ export default function MyBooksPage() {
 
     setUpdating(true);
     try {
+      
+      const { data: tokenData } = await authClient.token();
+
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/books/${editBook._id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${tokenData?.token}`, 
+        },
         body: JSON.stringify(editFormData),
       });
 
@@ -102,8 +108,14 @@ export default function MyBooksPage() {
   const handleDelete = async () => {
     if (!deleteId) return;
     try {
+      
+      const { data: tokenData } = await authClient.token();
+
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/books/${deleteId}`, {
         method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${tokenData?.token}`,
+        },
       });
 
       if (res.ok) {
@@ -136,8 +148,6 @@ export default function MyBooksPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {books.map((book) => (
             <div key={book._id} className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col hover:shadow-lg transition-shadow">
-              
-             
               <div className="w-full h-56 relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={book.image} alt={book.title} className="w-full h-full object-cover" />
@@ -164,7 +174,7 @@ export default function MyBooksPage() {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
+     
       {deleteId && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg p-6 max-w-sm w-full shadow-xl">
@@ -178,7 +188,6 @@ export default function MyBooksPage() {
         </div>
       )}
 
-      {/* Edit Book Modal */}
       {editBook && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl max-h-[90vh] overflow-y-auto">
