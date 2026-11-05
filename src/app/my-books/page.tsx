@@ -24,12 +24,10 @@ export default function MyBooksPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   
- 
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [editBook, setEditBook] = useState<Book | null>(null);
   const [updating, setUpdating] = useState(false);
 
-  
   const [editFormData, setEditFormData] = useState({
     title: "",
     author: "",
@@ -39,6 +37,7 @@ export default function MyBooksPage() {
   });
 
   useEffect(() => {
+    document.title = "BookNook | My Books";
     const fetchMyBooks = async () => {
       if (session?.user?.email) {
         try {
@@ -63,7 +62,6 @@ export default function MyBooksPage() {
     }
   }, [session, isPending, router]);
 
-  
   const handleEditClick = (book: Book) => {
     setEditBook(book);
     setEditFormData({
@@ -75,7 +73,6 @@ export default function MyBooksPage() {
     });
   };
 
-  
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editBook) return;
@@ -90,7 +87,6 @@ export default function MyBooksPage() {
 
       if (res.ok) {
         toast.success("Book updated successfully!");
-        
         setBooks(books.map((b) => b._id === editBook._id ? { ...b, ...editFormData } : b));
         setEditBook(null);
       } else {
@@ -103,7 +99,6 @@ export default function MyBooksPage() {
     }
   };
 
-  // delete
   const handleDelete = async () => {
     if (!deleteId) return;
     try {
@@ -132,19 +127,24 @@ export default function MyBooksPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">My Books</h1>
+    <div className="max-w-7xl mx-auto px-4 py-8 md:py-10">
+      <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8 text-center">My Books</h1>
 
       {books.length === 0 ? (
         <p className="text-center text-gray-500">You haven't added any books yet.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {books.map((book) => (
-            <div key={book._id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={book.image} alt={book.title} className="w-full h-48 object-cover" />
+            <div key={book._id} className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col hover:shadow-lg transition-shadow">
+              
+             
+              <div className="w-full h-56 relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={book.image} alt={book.title} className="w-full h-full object-cover" />
+              </div>
+
               <div className="p-4 flex flex-col grow">
-                <h2 className="text-xl font-bold text-gray-800 mb-1">{book.title}</h2>
+                <h2 className="text-lg md:text-xl font-bold text-gray-800 mb-1 line-clamp-1">{book.title}</h2>
                 <p className="text-sm text-gray-600 mb-4">by {book.author}</p>
                 
                 <div className="mt-auto grid grid-cols-3 gap-2">
@@ -154,7 +154,7 @@ export default function MyBooksPage() {
                   <Button onClick={() => handleEditClick(book)} className="bg-green-600 hover:bg-green-700 px-2 text-xs text-white">
                     Edit
                   </Button>
-                  <Button onClick={() => setDeleteId(book._id)} variant="destructive" className="bg-red-500 hover:bg-red-600 px-2 text-xs">
+                  <Button onClick={() => setDeleteId(book._id)} className="bg-red-500 hover:bg-red-600 px-2 text-xs text-white">
                     Delete
                   </Button>
                 </div>
@@ -172,7 +172,7 @@ export default function MyBooksPage() {
             <p className="text-gray-600 mb-6">Do you really want to delete this book?</p>
             <div className="flex justify-end space-x-3">
               <Button variant="outline" onClick={() => setDeleteId(null)}>Cancel</Button>
-              <Button onClick={handleDelete} className="bg-red-500 hover:bg-red-600">Delete</Button>
+              <Button onClick={handleDelete} className="bg-red-500 hover:bg-red-600 text-white">Delete</Button>
             </div>
           </div>
         </div>
@@ -182,36 +182,20 @@ export default function MyBooksPage() {
       {editBook && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Edit Book</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">Edit Book</h2>
             <form onSubmit={handleUpdate} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Book Title</label>
-                <input 
-                  type="text" 
-                  value={editFormData.title} 
-                  onChange={(e) => setEditFormData({...editFormData, title: e.target.value})} 
-                  required 
-                  className="w-full px-3 py-2 border rounded-md focus:outline-blue-500" 
-                />
+                <input type="text" value={editFormData.title} onChange={(e) => setEditFormData({...editFormData, title: e.target.value})} required className="w-full px-3 py-2 border rounded-md focus:outline-blue-500" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Author Name</label>
-                <input 
-                  type="text" 
-                  value={editFormData.author} 
-                  onChange={(e) => setEditFormData({...editFormData, author: e.target.value})} 
-                  required 
-                  className="w-full px-3 py-2 border rounded-md focus:outline-blue-500" 
-                />
+                <input type="text" value={editFormData.author} onChange={(e) => setEditFormData({...editFormData, author: e.target.value})} required className="w-full px-3 py-2 border rounded-md focus:outline-blue-500" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                  <select 
-                    value={editFormData.category} 
-                    onChange={(e) => setEditFormData({...editFormData, category: e.target.value})} 
-                    className="w-full px-3 py-2 border rounded-md focus:outline-blue-500 bg-white"
-                  >
+                  <select value={editFormData.category} onChange={(e) => setEditFormData({...editFormData, category: e.target.value})} className="w-full px-3 py-2 border rounded-md focus:outline-blue-500 bg-white">
                     <option value="Fiction">Fiction</option>
                     <option value="Science">Science</option>
                     <option value="History">History</option>
@@ -221,25 +205,12 @@ export default function MyBooksPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Total Copies</label>
-                  <input 
-                    type="number" 
-                    min="1" 
-                    value={editFormData.totalCopies} 
-                    onChange={(e) => setEditFormData({...editFormData, totalCopies: Number(e.target.value)})} 
-                    required 
-                    className="w-full px-3 py-2 border rounded-md focus:outline-blue-500" 
-                  />
+                  <input type="number" min="1" value={editFormData.totalCopies} onChange={(e) => setEditFormData({...editFormData, totalCopies: Number(e.target.value)})} required className="w-full px-3 py-2 border rounded-md focus:outline-blue-500" />
                 </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Short Description</label>
-                <textarea 
-                  value={editFormData.description} 
-                  onChange={(e) => setEditFormData({...editFormData, description: e.target.value})} 
-                  required 
-                  rows={3} 
-                  className="w-full px-3 py-2 border rounded-md focus:outline-blue-500"
-                ></textarea>
+                <textarea value={editFormData.description} onChange={(e) => setEditFormData({...editFormData, description: e.target.value})} required rows={3} className="w-full px-3 py-2 border rounded-md focus:outline-blue-500"></textarea>
               </div>
               <div className="flex justify-end space-x-3 pt-4">
                 <Button type="button" variant="outline" onClick={() => setEditBook(null)}>Cancel</Button>

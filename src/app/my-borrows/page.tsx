@@ -22,8 +22,9 @@ export default function MyBorrowsPage() {
   const [borrows, setBorrows] = useState<Borrow[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // data featch
+  //data fetch
   useEffect(() => {
+    document.title = "BookNook | My Borrows"; 
     const fetchBorrows = async () => {
       if (session?.user?.email) {
         try {
@@ -41,7 +42,7 @@ export default function MyBorrowsPage() {
     if (session) fetchBorrows();
   }, [session]);
 
-  // protection
+  
   useEffect(() => {
     if (!isPending && !session) {
       router.push("/login");
@@ -74,46 +75,66 @@ export default function MyBorrowsPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">My Borrows</h1>
+    <div className="max-w-6xl mx-auto px-4 py-8 md:py-10">
+      <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8 text-center">My Borrows</h1>
 
       {borrows.length === 0 ? (
         <p className="text-center text-gray-500 mt-10">You haven't borrowed any books yet.</p>
       ) : (
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-gray-100 text-gray-700">
-                <th className="p-4 border-b">Book</th>
-                <th className="p-4 border-b">Borrow Date</th>
-                <th className="p-4 border-b">Return Date</th>
-                <th className="p-4 border-b text-center">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {borrows.map((borrow) => (
-                <tr key={borrow._id} className="border-b hover:bg-gray-50">
-                  <td className="p-4 flex items-center space-x-4">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={borrow.bookImage} alt={borrow.bookTitle} className="w-12 h-16 object-cover rounded" />
-                    <span className="font-semibold text-gray-800">{borrow.bookTitle}</span>
-                  </td>
-                  <td className="p-4 text-gray-600">
-                    {new Date(borrow.borrowDate).toLocaleDateString()}
-                  </td>
-                  <td className="p-4 text-gray-600">
-                    {new Date(borrow.returnDate).toLocaleDateString()}
-                  </td>
-                  <td className="p-4 text-center">
-                    <Button onClick={() => handleReturn(borrow._id)} variant="destructive" className="bg-red-500 hover:bg-red-600">
-                      Return Book
-                    </Button>
-                  </td>
+        <>
+         
+          <div className="hidden md:block bg-white rounded-lg shadow-md overflow-hidden">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-gray-100 text-gray-700">
+                  <th className="p-4 border-b">Book</th>
+                  <th className="p-4 border-b">Borrow Date</th>
+                  <th className="p-4 border-b">Return Date</th>
+                  <th className="p-4 border-b text-center">Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {borrows.map((borrow) => (
+                  <tr key={borrow._id} className="border-b hover:bg-gray-50">
+                    <td className="p-4 flex items-center space-x-4">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={borrow.bookImage} alt={borrow.bookTitle} className="w-12 h-16 object-cover rounded" />
+                      <span className="font-semibold text-gray-800">{borrow.bookTitle}</span>
+                    </td>
+                    <td className="p-4 text-gray-600">{new Date(borrow.borrowDate).toLocaleDateString()}</td>
+                    <td className="p-4 text-gray-600">{new Date(borrow.returnDate).toLocaleDateString()}</td>
+                    <td className="p-4 text-center">
+                      
+                      <Button onClick={() => handleReturn(borrow._id)} className="bg-red-500 hover:bg-red-600 text-white">
+                        Return Book
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 md:hidden">
+            {borrows.map((borrow) => (
+              <div key={borrow._id} className="bg-white p-4 rounded-lg shadow-md flex flex-col space-y-3">
+                <div className="flex items-center space-x-4">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={borrow.bookImage} alt={borrow.bookTitle} className="w-16 h-20 object-cover rounded" />
+                  <div>
+                    <h3 className="font-bold text-gray-800">{borrow.bookTitle}</h3>
+                    <p className="text-sm text-gray-500 mt-1">Borrowed: {new Date(borrow.borrowDate).toLocaleDateString()}</p>
+                    <p className="text-sm text-gray-500">Return: {new Date(borrow.returnDate).toLocaleDateString()}</p>
+                  </div>
+                </div>
+              
+                <Button onClick={() => handleReturn(borrow._id)} className="w-full bg-red-500 hover:bg-red-600 text-white mt-2">
+                  Return Book
+                </Button>
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

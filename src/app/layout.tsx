@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from 'react-hot-toast';
-import Navbar from "@/components/Navbar"; // ✅ Navbar ইমপোর্ট করা হলো
+import Navbar from "@/components/Navbar"; // 
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,9 +28,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col bg-gray-50">
         <Toaster position="top-center" reverseOrder={false} />
         
-        <Navbar /> {/* ✅ Navbar এখানে যোগ করা হলো */}
+        <Navbar />
         
-        <main className="flex-grow">
+        <main className="grow">
           {children}
         </main>
       </body>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
@@ -10,8 +10,33 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Users, RefreshCw } from "lucide-react";
 
+
+interface Book {
+  _id: string;
+  title: string;
+  author: string;
+  category: string;
+  image: string;
+}
+
 export default function HomePage() {
-  // স্লাইডারের ডেটা
+  
+  const [newArrivals, setNewArrivals] = useState<Book[]>([]);
+
+  // data fetch
+  useEffect(() => {
+    const fetchNewArrivals = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/books`);
+        const data = await res.json();
+        setNewArrivals(data.slice(0, 6)); 
+      } catch (error) {
+        console.error("Failed to fetch new arrivals", error);
+      }
+    };
+    fetchNewArrivals();
+  }, []);
+
   const slides = [
     {
       id: 1,
@@ -35,9 +60,9 @@ export default function HomePage() {
 
   return (
     <div className="w-full">
-      {/* 1. Swiper Slider Section (Suspense দিয়ে মোড়ানো) */}
-      <Suspense fallback={<div className="w-full h-[500px] md:h-[600px] flex items-center justify-center bg-gray-200 text-gray-500">Loading Slider...</div>}>
-        <section className="w-full h-[500px] md:h-[600px]">
+      {/* 1. Swiper Slider Section */}
+      <Suspense fallback={<div className="w-full h-125 md:h-150 flex items-center justify-center bg-gray-200 text-gray-500">Loading Slider...</div>}>
+        <section className="w-full h-125 md:h-150">
           <Swiper
             spaceBetween={30}
             centeredSlides={true}
@@ -50,7 +75,6 @@ export default function HomePage() {
             {slides.map((slide) => (
               <SwiperSlide key={slide.id}>
                 <div className="relative w-full h-full flex items-center justify-center">
-                  {/* ব্যাকগ্রাউন্ড ইমেজ */}
                   <div 
                     className="absolute inset-0 bg-cover bg-center"
                     style={{ backgroundImage: `url(${slide.image})` }}
@@ -58,7 +82,6 @@ export default function HomePage() {
                     <div className="absolute inset-0 bg-black/50" />
                   </div>
                   
-                  {/* স্লাইড টেক্সট */}
                   <div className="relative z-10 text-center text-white px-4 max-w-3xl">
                     <h1 className="text-4xl md:text-6xl font-bold mb-4">{slide.title}</h1>
                     <p className="text-lg md:text-xl mb-8">{slide.text}</p>
@@ -133,7 +156,7 @@ export default function HomePage() {
         </div>
       </section>
       
-      {/* 4. New Arrivals Section Placeholder */}
+      {/* 4. New Arrivals Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
@@ -142,10 +165,27 @@ export default function HomePage() {
                <Button variant="outline">See All Books</Button>
             </Link>
           </div>
-          {/* এখানে পরবর্তী ধাপে ডাটাবেস থেকে বই দেখানো হবে */}
-          <div className="text-center py-10 text-gray-500 border-2 border-dashed rounded-lg">
-             [New Arrivals Books from Database will appear here soon]
-          </div>
+          
+          {newArrivals.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {newArrivals.map((book) => (
+                <div key={book._id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col hover:shadow-xl transition-all">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={book.image} alt={book.title} className="w-full h-56 object-cover" />
+                  <div className="p-4 flex flex-col grow">
+                    <span className="text-xs font-semibold text-blue-600 uppercase mb-1">{book.category}</span>
+                    <h3 className="text-lg font-bold text-gray-800 mb-1">{book.title}</h3>
+                    <p className="text-sm text-gray-600 mb-4">by {book.author}</p>
+                    <Link href={`/books/${book._id}`} className="mt-auto">
+                      <Button className="w-full bg-blue-600 hover:bg-blue-700">View Details</Button>
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-gray-500 py-10">No books added yet.</p>
+          )}
         </div>
       </section>
 
