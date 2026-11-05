@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BookNook - A Small Online Library
+
+Live Site: [https://your-live-site-url.vercel.app](https://your-live-site-url.vercel.app)
+
+## Project Overview
+BookNook is a small online library where users can explore a vast collection of books, add their own books to share with the community, and borrow books for a few days. The core idea is simple: "Add a book, borrow a book, return a book."
+
+## Features
+- 📚 **Browse Books:** Explore a wide collection of books across different categories on the Home and All Books pages.
+- 🔐 **Secure Authentication:** User registration and login with BetterAuth (Email/Password & Google Social Login).
+- ➕ **Add Books:** Logged-in users can add new books with image uploads (via ImgBB), title, author, category, and description.
+- 📖 **Borrow System:** Users can borrow available books, with automatic tracking of borrow and return dates. The total available copies decrease upon borrowing and increase upon returning.
+- 🔄 **My Borrows & Return:** Users can view all the books they have borrowed and return them with a single click.
+- ✏️ **Manage Books (CRUD):** Users can view, edit, and delete the books they have added in the "My Books" section.
+- 📱 **Fully Responsive:** Beautiful, modern UI built with Tailwind CSS and Shadcn UI, optimized for mobile, tablet, and desktop views.
+- 🛡️ **JWT Protected APIs:** Secure backend API routes using JSON Web Tokens (JWT) for authorized actions.
+
+## Tech Stack
+### Frontend
+- **Framework:** Next.js 14+ (App Router)
+- **Styling:** Tailwind CSS & Shadcn UI
+- **Authentication:** BetterAuth (MongoDB Adapter)
+- **Animations & Icons:** Swiper.js, Lucide React
+
+### Backend
+- **Server:** Express.js (Node.js)
+- **Database:** MongoDB
+- **Security:** JWT (JSON Web Tokens), CORS
 
 ## Getting Started
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/booknook-client.git
