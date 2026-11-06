@@ -1,6 +1,6 @@
 # BookNook - A Small Online Library
 
-**Live Site:** **Live Site:** [Click Here to Visit BookNook](https://booknook-client-alpha-lemon.vercel.app/)
+**Live Site:**  [Click Here to Visit BookNook](https://booknook-client-alpha-lemon.vercel.app/)
 
 ## Project Overview
 BookNook is a small online library where users can explore a vast collection of books, add their own books to share with the community, and borrow books for a few days. The core idea is simple: "Add a book, borrow a book, return a book."
