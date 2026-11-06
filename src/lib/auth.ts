@@ -3,11 +3,12 @@ import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { jwt } from "better-auth/plugins";
 import { MongoClient } from "mongodb";
 
-const client = new MongoClient(process.env.MONGODB_URL as string);
+
+const mongoUrl = process.env.MONGODB_URL || "mongodb://localhost:27017/dummy";
+const client = new MongoClient(mongoUrl);
 const db = client.db("booknookDB");
 
 export const auth = betterAuth({
-  baseURL: process.env.BETTER_AUTH_URL, 
   database: mongodbAdapter(db),
   emailAndPassword: {
     enabled: true,
