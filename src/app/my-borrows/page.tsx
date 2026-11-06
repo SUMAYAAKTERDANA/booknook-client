@@ -22,17 +22,14 @@ export default function MyBorrowsPage() {
   const [borrows, setBorrows] = useState<Borrow[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // ডাটা ফেচ
   useEffect(() => {
     document.title = "BookNook | My Borrows";
     
     const fetchBorrows = async () => {
       if (session?.user?.email) {
         try {
-         
           const { data: tokenData } = await authClient.token();
 
-          
           const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/borrows?email=${session.user.email}`, {
             headers: {
               "Authorization": `Bearer ${tokenData?.token}`
@@ -41,7 +38,6 @@ export default function MyBorrowsPage() {
           
           const data = await res.json();
           
-         
           if (Array.isArray(data)) {
             setBorrows(data);
           } else {
@@ -56,26 +52,24 @@ export default function MyBorrowsPage() {
           setLoading(false);
         }
       } else if (!isPending && !session) {
-       
         setLoading(false);
       }
     };
 
     fetchBorrows();
   }, [session, isPending]);
- 
+
+  
   useEffect(() => {
-    if (!isPending && !session) {
+    if (!isPending && !session && !loading) {
       router.push("/login");
     }
-  }, [session, isPending, router]);
+  }, [session, isPending, loading, router]);
 
   const handleReturn = async (id: string) => {
     try {
-     
       const { data: tokenData } = await authClient.token();
 
-      
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/borrows/${id}`, {
         method: "DELETE",
         headers: {
@@ -89,7 +83,7 @@ export default function MyBorrowsPage() {
       } else {
         toast.error("Failed to return book");
       }
-    } catch {
+    } catch  {
       toast.error("Something went wrong!");
     }
   };
@@ -110,7 +104,7 @@ export default function MyBorrowsPage() {
         <p className="text-center text-gray-500 mt-10">You haven&apos;t borrowed any books yet.</p>
       ) : (
         <>
-        
+       
           <div className="hidden md:block bg-white rounded-lg shadow-md overflow-hidden">
             <table className="w-full text-left border-collapse">
               <thead>

@@ -50,17 +50,20 @@ export default function MyBooksPage() {
         } finally {
           setLoading(false);
         }
+      } else if (!isPending && !session) {
+        setLoading(false);
       }
     };
 
-    if (session) fetchMyBooks();
-  }, [session]);
+    fetchMyBooks();
+  }, [session, isPending]);
 
+  
   useEffect(() => {
-    if (!isPending && !session) {
+    if (!isPending && !session && !loading) {
       router.push("/login");
     }
-  }, [session, isPending, router]);
+  }, [session, isPending, loading, router]);
 
   const handleEditClick = (book: Book) => {
     setEditBook(book);
@@ -79,7 +82,6 @@ export default function MyBooksPage() {
 
     setUpdating(true);
     try {
-      
       const { data: tokenData } = await authClient.token();
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/books/${editBook._id}`, {
@@ -108,7 +110,6 @@ export default function MyBooksPage() {
   const handleDelete = async () => {
     if (!deleteId) return;
     try {
-      
       const { data: tokenData } = await authClient.token();
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/books/${deleteId}`, {
@@ -125,11 +126,12 @@ export default function MyBooksPage() {
       } else {
         toast.error("Failed to delete book");
       }
-    } catch {
+    } catch{
       toast.error("Something went wrong!");
     }
   };
 
+  
   if (loading || isPending) {
     return (
       <div className="flex justify-center items-center h-[60vh]">
@@ -174,7 +176,7 @@ export default function MyBooksPage() {
         </div>
       )}
 
-     
+      {/* Delete Confirmation Modal */}
       {deleteId && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg p-6 max-w-sm w-full shadow-xl">
@@ -188,6 +190,7 @@ export default function MyBooksPage() {
         </div>
       )}
 
+      {/* Edit Book Modal */}
       {editBook && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl max-h-[90vh] overflow-y-auto">

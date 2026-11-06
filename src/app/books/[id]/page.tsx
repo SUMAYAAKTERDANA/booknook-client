@@ -46,11 +46,12 @@ export default function BookDetailsPage() {
     if (id) fetchBook();
   }, [id, book?.title]);
 
+  
   useEffect(() => {
-    if (!isPending && !session) {
+    if (!isPending && !session && !loading) {
       router.push(`/login?callbackUrl=/books/${id}`);
     }
-  }, [session, isPending, router, id]);
+  }, [session, isPending, loading, router, id]);
 
   const handleBorrow = async () => {
     if (!session) {
@@ -60,7 +61,6 @@ export default function BookDetailsPage() {
 
     setBorrowing(true);
     try {
-     
       const { data: tokenData } = await authClient.token();
 
       const borrowData = {
@@ -70,7 +70,7 @@ export default function BookDetailsPage() {
         userEmail: session.user.email,
         userName: session.user.name,
         borrowDate: new Date(),
-        returnDate: new Date(new Date().setDate(new Date().getDate() + 7)),
+        returnDate: new Date(new Date().setDate(new Date().getDate() + 7)), 
       };
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/borrows`, {
@@ -90,8 +90,7 @@ export default function BookDetailsPage() {
         const errorData = await res.json();
         toast.error(errorData.message || "Failed to borrow book!");
       }
-    } catch (err) {
-      console.error("Borrow error:", err);
+    } catch {
       toast.error("Something went wrong!");
     } finally {
       setBorrowing(false);
