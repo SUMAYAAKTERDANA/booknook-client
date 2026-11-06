@@ -1,11 +1,13 @@
 # BookNook - A Small Online Library
 
-Live Site: [https://your-live-site-url.vercel.app](https://your-live-site-url.vercel.app)
+
 
 ## Project Overview
-BookNook is a small online library where users can explore a vast collection of books, add their own books to share with the community, and borrow books for a few days. The core idea is simple: "Add a book, borrow a book, return a book."
+BookNook is a small online library where users can explore a vast collection of books, add their own
+ books to share with the community, and borrow books for a few days. The core idea is simple: "Add a book, borrow a book, return a book."
 
 ## Features
+
 - 📚 **Browse Books:** Explore a wide collection of books across different categories on the Home and All Books pages.
 - 🔐 **Secure Authentication:** User registration and login with BetterAuth (Email/Password & Google Social Login).
 - ➕ **Add Books:** Logged-in users can add new books with image uploads (via ImgBB), title, author, category, and description.
@@ -16,6 +18,7 @@ BookNook is a small online library where users can explore a vast collection of 
 - 🛡️ **JWT Protected APIs:** Secure backend API routes using JSON Web Tokens (JWT) for authorized actions.
 
 ## Tech Stack
+
 ### Frontend
 - **Framework:** Next.js 14+ (App Router)
 - **Styling:** Tailwind CSS & Shadcn UI
@@ -27,8 +30,5 @@ BookNook is a small online library where users can explore a vast collection of 
 - **Database:** MongoDB
 - **Security:** JWT (JSON Web Tokens), CORS
 
-## Getting Started
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/booknook-client.git
+

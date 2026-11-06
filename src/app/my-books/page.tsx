@@ -98,7 +98,7 @@ export default function MyBooksPage() {
       } else {
         toast.error("Failed to update book");
       }
-    } catch (error) {
+    } catch  {
       toast.error("Something went wrong!");
     } finally {
       setUpdating(false);
@@ -125,7 +125,7 @@ export default function MyBooksPage() {
       } else {
         toast.error("Failed to delete book");
       }
-    } catch (error) {
+    } catch {
       toast.error("Something went wrong!");
     }
   };
@@ -143,7 +143,7 @@ export default function MyBooksPage() {
       <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8 text-center">My Books</h1>
 
       {books.length === 0 ? (
-        <p className="text-center text-gray-500">You haven't added any books yet.</p>
+        <p className="text-center text-gray-500">You haven&apos;t added any books yet.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {books.map((book) => (

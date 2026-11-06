@@ -24,7 +24,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const { data, error } = await authClient.signIn.email({
+      const {  error } = await authClient.signIn.email({
         email: formData.email,
         password: formData.password,
       });
@@ -35,7 +35,7 @@ export default function LoginPage() {
         toast.success("Logged in successfully!");
         router.push(callbackUrl);
       }
-    } catch (err) {
+    } catch  {
       toast.error("Something went wrong!");
     } finally {
       setLoading(false);
@@ -49,7 +49,7 @@ export default function LoginPage() {
         provider: "google",
         callbackURL: callbackUrl,
       });
-    } catch (err) {
+    } catch {
       toast.error("Google login failed!");
     }
   };

@@ -42,7 +42,7 @@ export default function RegisterPage() {
 
     try {
      
-      const { data, error } = await authClient.signUp.email({
+      const {  error } = await authClient.signUp.email({
         email: formData.email,
         password: formData.password,
         name: formData.name,

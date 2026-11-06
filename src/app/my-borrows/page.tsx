@@ -89,7 +89,7 @@ export default function MyBorrowsPage() {
       } else {
         toast.error("Failed to return book");
       }
-    } catch (error) {
+    } catch {
       toast.error("Something went wrong!");
     }
   };
@@ -107,7 +107,7 @@ export default function MyBorrowsPage() {
       <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8 text-center">My Borrows</h1>
 
       {borrows.length === 0 ? (
-        <p className="text-center text-gray-500 mt-10">You haven't borrowed any books yet.</p>
+        <p className="text-center text-gray-500 mt-10">You haven&apos;t borrowed any books yet.</p>
       ) : (
         <>
         
